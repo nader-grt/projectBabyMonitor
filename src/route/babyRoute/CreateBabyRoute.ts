@@ -2,10 +2,11 @@ import { Request, Response, Router } from "express";
 
 import CreateBabyController from "../../controller/CreateBabyController";
 import CreateBabyUseCase from "../../usecase/CreateBabyUseCase";
+import RepoUser from "../../repo/repoUser/RepoUser";
 
 const router = Router()
-
- const createUsecase = new CreateBabyUseCase()  ;
+const babyRepo = new RepoUser()
+ const createUsecase = new CreateBabyUseCase(babyRepo)  ;
 
  const CreateBabyRoute = new CreateBabyController(createUsecase)
 

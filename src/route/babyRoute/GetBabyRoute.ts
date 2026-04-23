@@ -10,7 +10,7 @@ const getBabyRoute = new GetBabyController(babyusecase);
 
 router.get("/baby", (req: Request, res: Response) => {
   // console.log("request is ",req)
-  console.log(" rrrrrrrrrr  ", req.body);
+  console.log(" get  ", req.body);
   getBabyRoute.execute(req, res);
 });
 

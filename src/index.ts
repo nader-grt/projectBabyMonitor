@@ -4,6 +4,12 @@ import express, { json } from "express";
 // baby 
  import getBaby from "./route/babyRoute/GetBabyRoute"
  import createBaby from "./route/babyRoute/CreateBabyRoute"
+
+// auth 
+
+import registerUserRoute from "./route/auth/RegisterUserRoute"
+//import loginUser from "./route/auth/LoginUserRoute"
+
 import fatherController from "./controller/fatherController";
 import EnvirmentController from "./controller/EnvirmentController";
 
@@ -14,7 +20,10 @@ app.use(json());
 const port = 4000
 
 
+//auth 
+app.use("/api",registerUserRoute)
 
+// baby
 app.use("/api",getBaby)
 app.use("/api",createBaby)
 

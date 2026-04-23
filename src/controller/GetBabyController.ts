@@ -12,6 +12,25 @@ export default class GetBabyController extends BaseController {
 
   protected async executeImplment(req: Request, res: Response): Promise<any> {
     try {
+
+        const data = {
+          name:"ahmed"
+        }
+
+        const listInfoBaby :any = 
+        {
+          
+        }
+        let name :string = "AHMED" ;
+          if(data.name === name)
+          {
+            return this.ok(res,data,"ok")
+          }
+          else
+          {
+       return this.notfound(res,console.error,"not found does not same name")
+          }
+          
     } catch (error: any) {}
   }
 }

@@ -33,6 +33,27 @@ export default  abstract  class BaseController
      {
          console.log("failer")
      }
+     public ok(res:Response,data?:any,message?:any)
+     {
+       return res.json( {data:data,message:message})
+     }
+
+     public resultValue(res:Response,data:any,message?:string)
+     {
+      return res.json({data,message})
+     }
+     public notfound(res:Response,error:any,message?:string)
+     {
+      return res.status(404).json({error,message})
+     }
+
+
+     public unathorized(res:Response,message:any)
+     {
+       res.status(401).json({message})
+     }
+
+
 }
 
 //const basec = new BaseController()
@@ -72,5 +93,46 @@ export default  abstract  class BaseController
         class  contain member  data  variables  and function 
 
         obkect member data 
+
+
+        rule http  protocol hyper text pransfert protocol 
+
+        model tcp /ip 
+        layer application 
+        request object  contain two component principal 
+        1 header object
+        status code 2xx 3xx 4xx 5xx  message  (ok , unautorized conflit)  
+        2 body object 
+         content type  plain/text  html  json 
+         content length 100ko 100mb 
+         dommain facebook 
+        layer transmi
+        layer session 
+        layer connection 
+
+
+  entiy diagram  relationship
+
+    father mother  baby three compnent 
+      role  father mother   name lastname email  password
+      baby  two  component  each baby depend family 
+
+          info depend capteur   socket.io  +  event   cote subscribe 
+        temp  t ,  capteure 1
+        freques cardial  capteure 2 
+         
+        capteur  3  give us three information in same temps 
+        temp envirment
+        humdity envir
+        press envirment
+
+             capteur 4  alone 
+        gaz  boolean 
+
+        ai  plus camera 
+        postion  enum back aside or 
+        crying boolean 
+
+
 
  */
