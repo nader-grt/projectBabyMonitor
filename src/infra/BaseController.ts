@@ -135,4 +135,12 @@ export default  abstract  class BaseController
 
 
 
+        config db 
+        username :Nader
+        password :projectBabyMonitor
+
+
+          strucure of project monotholic  or hybrid 
+
+          saas layer  tba9aat   two  compnent busnis database  busnis domain   busnis ui 
  */

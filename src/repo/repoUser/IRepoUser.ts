@@ -2,10 +2,10 @@
 
 export default abstract class  IRepoUser
 {
-     protected abstract RegisterUserBaby(userBaby:any):Promise<any> ;
+     protected abstract RegisterUser(dataUser:any):Promise<any> ;
 
-     protected abstract GetAllBaby(userBaby:any):Promise<any> ;
+     protected abstract GetAll(data:any):Promise<any> ;
 
-     protected abstract LoginUserBaby(baby:any):Promise<any>
-     protected abstract FindUserBabyByEmail(email:string):Promise<any>
+     protected abstract LoginUser(baby:any):Promise<any>
+     protected abstract FindUserByEmail(email:string):Promise<any>
 }
