@@ -1,18 +1,18 @@
 import generateAccessToken from "../../middleware/generateAccessToken";
 import UserDomain from "../../model/UserDomain/UserDomain";
-import IUserData  from "../../middleware/generateAccessToken"
+
 import RepoUser from "../../repo/repoUser/RepoUser";
 
- export  default interface IUserInfoDTO
- {
-  firstName:string;
-  lastName:string;
-  email:string;
-  password:string;
-  confirmPassword:string;
-  nameBaby:string;
-  BirthDayBaby:Date;
- }
+ interface IBaby {
+    name: string;
+    birthDate: Date;
+  }
+  export default interface IUserInfoDTO {
+    fullName: string;
+    email: string;
+    password: string;
+    baby: IBaby;
+  }
 
 export default class RegisterUserUseCase 
 {
@@ -54,14 +54,10 @@ export default class RegisterUserUseCase
         // const result =      await this._useregister.RegisterUser(dto) ;
 
 
-        const payload :IUserData = {
-            email:"islm@gmail.com",
-            id:1,
-           
-        }
-              const token :any = await generateAccessToken(payload)
+    
+          //    const token :any = await generateAccessToken(payload)
 
-              console.log("token  "  ,token )      //   console.log("result ",result)
+            //  console.log("token  "  ,token )      //   console.log("result ",result)
           } catch (error:any) {
             
           }

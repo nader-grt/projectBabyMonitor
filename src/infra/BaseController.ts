@@ -1,146 +1,83 @@
+import { Request, Response } from "express";
 
+export default abstract class BaseController {
 
-import { Request ,Response } from 'express';
+  protected abstract executeImplment(
+    req: Request,
+    res: Response
+  ): Promise<any>;
 
-export default  abstract  class BaseController
-{
+  public async execute(req: Request, res: Response): Promise<any> {
+    try {
+      await this.executeImplment(req, res);
+    } catch (error: any) {
+      console.error("Unexpected error:", error);
 
-
-  protected abstract   executeImplment(req:Request ,res:Response):Promise<any>
-  
-
-   public async execute(req:Request ,res:Response):Promise<any>
-   {
-       try {
-          await this.executeImplment(req,res)
-       } catch (error :any) {
-        console.log("error unexpected ")
-       }
-   }
-
-  
-
-     public create(req:Request ,res:Response)
-     {
-         console.log("request is ",req)
-     }
-     public getStausSuccess()
-     {
-        console.log("success")
-     }
-
-     public faler()
-     {
-         console.log("failer")
-     }
-     public ok(res:Response,data?:any,message?:any)
-     {
-       return res.json( {data:data,message:message})
-     }
-
-     public resultValue(res:Response,data:any,message?:string)
-     {
-      return res.json({data,message})
-     }
-     public notfound(res:Response,error:any,message?:string)
-     {
-      return res.status(404).json({error,message})
-     }
-
-
-     public unathorized(res:Response,message:any)
-     {
-       res.status(401).json({message})
-     }
-
-
-}
-
-//const basec = new BaseController()
-
-/**
- * 
- * 
-  cycle request  and response 
-
-  response can be html  or xml or json 
-  for json   json object notation  ==  format  
-  {
-    "":"", // key value pair  datatype suport  string number null  array and object 
+      return this.internalError(res, error.message);
+    }
   }
-      request  object for server unique method  get put post delete patch 
 
+  // -------------------------
+  // SUCCESS
+  // -------------------------
+  protected ok(res: Response, data?: any, message = "OK") {
+    return res.status(200).json({
+      success: true,
+      message,
+      data,
+    });
+  }
 
-      request.body
-      request.params
-      request.query
+  protected created(res: Response, data?: any, message = "Created") {
+    return res.status(201).json({
+      success: true,
+      message,
+      data,
+    });
+  }
 
-      what is in js {}  = []  typeof
-      key  key must be unique and can be number or string  value
-      {
-        name:"ahmed",
-        data: {}
-      }
-      url  domain 
-      params
-      query params
+  // -------------------------
+  // FAIL (CLIENT ERRORS)
+  // -------------------------
+  protected fail(res: Response, message = "Bad Request", errors?: any) {
+    return res.status(400).json({
+      success: false,
+      message,
+      errors,
+    });
+  }
 
-       status  2xx sucees 201 created 3xx  redirect 4xx  401 unauthrized 404 client  5xx  server 
-       
+  protected unauthorized(res: Response, message = "Unauthorized") {
+    return res.status(401).json({
+      success: false,
+      message,
+    });
+  }
 
-        visibility mode are public protect  private  static 
+  protected forbidden(res: Response, message = "Forbidden") {
+    return res.status(403).json({
+      success: false,
+      message,
+    });
+  }
 
-        class  contain member  data  variables  and function 
+  protected notFound(res: Response, message = "Not Found") {
+    return res.status(404).json({
+      success: false,
+      message,
+    });
+  }
 
-        obkect member data 
-
-
-        rule http  protocol hyper text pransfert protocol 
-
-        model tcp /ip 
-        layer application 
-        request object  contain two component principal 
-        1 header object
-        status code 2xx 3xx 4xx 5xx  message  (ok , unautorized conflit)  
-        2 body object 
-         content type  plain/text  html  json 
-         content length 100ko 100mb 
-         dommain facebook 
-        layer transmi
-        layer session 
-        layer connection 
-
-
-  entiy diagram  relationship
-
-    father mother  baby three compnent 
-      role  father mother   name lastname email  password
-      baby  two  component  each baby depend family 
-
-          info depend capteur   socket.io  +  event   cote subscribe 
-        temp  t ,  capteure 1
-        freques cardial  capteure 2 
-         
-        capteur  3  give us three information in same temps 
-        temp envirment
-        humdity envir
-        press envirment
-
-             capteur 4  alone 
-        gaz  boolean 
-
-        ai  plus camera 
-        postion  enum back aside or 
-        crying boolean 
-
-
-
-        config db 
-        username :Nader
-        password :projectBabyMonitor
-
-
-          strucure of project monotholic  or hybrid 
-
-          saas layer  tba9aat   two  compnent busnis database  busnis domain   busnis ui 
- */
+  // -------------------------
+  // SERVER ERROR
+  // -------------------------
+  protected internalError(
+    res: Response,
+    message = "Internal Server Error"
+  ) {
+    return res.status(500).json({
+      success: false,
+      message,
+    });
+  }
+}

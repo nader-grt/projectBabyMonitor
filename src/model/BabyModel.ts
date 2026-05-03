@@ -1,24 +1,15 @@
 import mongoose, { Schema, Document, Types } from "mongoose";
 
-/**
- * Interface (Business shape)
- */
 export interface IBaby {
   name: string;
   birthDate: Date;
-  parentId: Types.ObjectId;
+  userId: Types.ObjectId;
 }
 
-/**
- * Document (MongoDB Document)
- */
 export interface IBabyDocument extends IBaby, Document {
-  ageInMonths?: number; // virtual
+  ageInMonths?: number;
 }
 
-/**
- * Schema
- */
 const babySchema = new Schema<IBabyDocument>(
   {
     name: {
@@ -33,18 +24,16 @@ const babySchema = new Schema<IBabyDocument>(
       type: Date,
       required: true,
       validate: {
-        validator: function (value: Date) {
-          return value <= new Date(); // can't be future date
-        },
+        validator: (value: Date) => value <= new Date(),
         message: "Birth date cannot be in the future",
       },
     },
 
-    parentId: {
+    userId: {
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      index: true, //  important for performance
+      index: true,
     },
   },
   {
@@ -54,44 +43,24 @@ const babySchema = new Schema<IBabyDocument>(
   }
 );
 
-
-
-/**
- *  Virtual Field (Computed)
- * Example: Age in months
- */
 babySchema.virtual("ageInMonths").get(function () {
   const today = new Date();
   const birth = this.birthDate;
 
-  const months =
+  return (
     (today.getFullYear() - birth.getFullYear()) * 12 +
-    (today.getMonth() - birth.getMonth());
-
-  return months;
+    (today.getMonth() - birth.getMonth())
+  );
 });
 
+//  FIXED INDEX
+babySchema.index({ userId: 1, createdAt: -1 });
 
-
-/**
- *  Indexes (for scaling)
- */
-babySchema.index({ parentId: 1, createdAt: -1 });
-
-
-
-/**
- *  Static Methods (optional but powerful)
- */
-babySchema.statics.findByParent = function (parentId: Types.ObjectId) {
-  return this.find({ parentId });
+//  STATIC METHOD
+babySchema.statics.findByUser = function (userId: Types.ObjectId) {
+  return this.find({ userId });
 };
 
-
-
-/**
- * Model
- */
 export const BabyModel = mongoose.model<IBabyDocument>(
   "Baby",
   babySchema

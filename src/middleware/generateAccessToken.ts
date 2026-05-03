@@ -1,13 +1,14 @@
 import jwt from "jsonwebtoken";
 
-  export default  interface IUserData
+  interface IUserData
   {
-    id:number;
     email:string;
+    id:number | any;
+  
 
   }
   //15 or 20 
-export default async  function generateAccessToken(user:any):Promise<string>
+export default async  function generateAccessToken(user:IUserData):Promise<string>
 {
 
 
@@ -16,7 +17,7 @@ export default async  function generateAccessToken(user:any):Promise<string>
     //       id:1,
          
     //   }
-  const  token = jwt.sign( user,process.env.SEKRET_ACCESS_TOKEN!)
+  const  token = jwt.sign( user,process.env.SEKRET_ACCESS_TOKEN!,{ expiresIn: "15m" })
 
   return token ;
 }

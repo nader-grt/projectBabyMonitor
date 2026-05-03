@@ -6,8 +6,7 @@ import mongoose, { Schema, Document } from "mongoose";
  /**
  * 
  {
-    "firstName":"islem",
-  "lastName":"",
+   fullName
     "email":"islemmonastir@gmail.com",
     "password": "123456789",
 
@@ -20,15 +19,13 @@ import mongoose, { Schema, Document } from "mongoose";
  */
 
 export interface IUser {
-  firstName: string;
-  lastName: string;
- 
+
+ fullName:string ;
   email: string;
 
   password: string;
-  confirmPassword:string;
-  nameBaby:string;
-  BirthDayBaby:Date
+
+
 
 }
 
@@ -42,9 +39,9 @@ export interface IUserDocument extends IUser, Document {}
  */
 const userSchema = new Schema<IUserDocument>(
   {
-    firstName: { type: String, required: true, trim: true },
+    fullName: { type: String, required: true, trim: true },
 
-    lastName: { type: String, required: true, trim: true },
+ 
 
   
 
@@ -63,24 +60,8 @@ const userSchema = new Schema<IUserDocument>(
       minlength: 6,
       select: false, //  hide password
     },
-    confirmPassword: {
-        type: String,
-        required: true,
-        minlength: 6,
-        select: false, //  hide password
-      },
-      nameBaby: {
-        type: String,
-        required: true,
-        minlength: 3,
-   //  hide password
-      },
-      BirthDayBaby: {
-        type: Date,
-        required: true,
-     
-        //  hide password
-      },
+
+  
   },
   { timestamps: true }
 );

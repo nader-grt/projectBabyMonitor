@@ -2,107 +2,84 @@ import { Request, Response } from "express";
 import BaseController from "../../infra/BaseController";
 import RegisterUserUseCase from "../../usecase/auth/RegisterUserUseCase";
 import Joi from "joi";
+import IUserInfoDTO from "../../usecase/auth/RegisterUserUseCase";
 
-
-
-/**
- * 
- {
-    "firstName":"islem",
-  "lastName":"",
-    "email":"islemmonastir@gmail.com",
-    "password": "123456789",
-    "confirmPassword":"",
-    "nameBaby":"",
-    "BirthDayBaby"
-}
- */
 export default class RegisterUserController extends BaseController {
-  // private async validateUser(user: any): Promise<any> {
-  //   const JoiSchema = Joi.object({
-  //     firstName: Joi.string().min(3).max(30).required(),
-  //     lastName: Joi.string().min(3).max(30).required(),
-  //     email: Joi.string().min(12).max(30).required(),
 
-  //     password: Joi.number()
+  private _registerUsecase: RegisterUserUseCase;
 
-  //       .min(4)
-  //       // .max(6)
-  //       .required(),
-  //       confirmPassword:Joi.number().min(4).required(),
-  //       nameBaby:Joi.string().min(3).required(),
-  //       BirthDayBaby:Joi.date().required(),
-  //   }); // .options({ abortEarly: false }),
-  
-
-  //   return JoiSchema.validate(user);
-  // }
+  constructor(usecase: RegisterUserUseCase) {
+    super();
+    this._registerUsecase = usecase;
+  }
 
 
-  private async validateUser(user: any): Promise<any> {
-    const JoiSchema = Joi.object({
-      firstName: Joi.string().min(3).max(30).required(),
-  
-      lastName: Joi.string().min(3).max(30).required(),
-  
+  private validateUser(data: any) {
+    const schema = Joi.object({
+      fullName: Joi.string().min(3).max(50).required(),
+
       email: Joi.string().email().required(),
-  
+
       password: Joi.string().min(6).required(),
-  
+
       confirmPassword: Joi.string()
         .valid(Joi.ref("password"))
         .required()
         .messages({
           "any.only": "Passwords do not match",
         }),
-  
-      nameBaby: Joi.string().min(3).required(),
-  
-      BirthDayBaby: Joi.date()
-        .iso() //  enforce ISO format (YYYY-MM-DD)
-        .max("now") //  prevent future dates
-        .required()
-        .messages({
-          "date.base": "BirthDayBaby must be a valid date",
-          "date.format": "BirthDayBaby must be in YYYY-MM-DD format",
-          "date.max": "BirthDayBaby cannot be in the future",
-        }),
-    }).options({ abortEarly: false });
-  
-    return JoiSchema.validate(user);
+
+      baby: Joi.object({
+        name: Joi.string().min(2).max(50).required(),
+
+        birthDate: Joi.date()
+          .iso()
+          .max("now")
+          .required()
+          .messages({
+            "date.base": "Birth date must be valid",
+            "date.format": "Use YYYY-MM-DD",
+            "date.max": "Birth date cannot be in the future",
+          }),
+      }).required(),
+    })
+    .options({ abortEarly: false, stripUnknown: true }); //  
+
+    return schema.validate(data);
   }
 
-  private _registerUsecase!: RegisterUserUseCase;
-  constructor(usecase: RegisterUserUseCase) {
-    super();
-
-    this._registerUsecase = usecase;
-  }
 
   protected async executeImplment(req: Request, res: Response): Promise<any> {
-    const { firstName, lastName, email, password ,confirmPassword,nameBaby,BirthDayBaby} = req.body;
-
     try {
-
-      const dtoUserInfo :any = {
-        firstName, lastName, email, password ,confirmPassword,nameBaby,BirthDayBaby
+      const { error, value } = this.validateUser(req.body);
+  
+      if (error) {
+        const formattedErrors = error.details.map((e: any) => ({
+          field: e.path.join("."),
+          message: e.message,
+        }));
+  
+        return this.fail(res, "Validation error", formattedErrors);
       }
-
-
-      console.log("controller  ",dtoUserInfo)
-
-   const resultValidateUserInfo :any =         await  this.validateUser(dtoUserInfo)
-
-     if(resultValidateUserInfo.error)
-     {
-
-     }else
-     {
-
-     }
-         await this._registerUsecase.execute(dtoUserInfo)
-
-           return this.ok(res,"ok")
-    } catch (error: any) {}
+  
+      const { confirmPassword, ...cleanData } = value;
+  
+      const dto :IUserInfoDTO= {
+        fullName: cleanData.fullName,
+        email: cleanData.email,
+        password: cleanData.password,
+        baby: {
+          name: cleanData.baby.name,
+          birthDate: cleanData.baby.birthDate,
+        },
+      };
+  
+      const result = await this._registerUsecase.execute(dto);
+  
+      return this.created(res, result);
+  
+    } catch (error: any) {
+      return this.internalError(res, error.message);
+    }
   }
 }
