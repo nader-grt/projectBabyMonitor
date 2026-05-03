@@ -1,17 +1,30 @@
+import RepoUser from "../../repo/repoUser/RepoUser";
 
+export default class LogoutUserUseCase {
 
+  private _repo: RepoUser;
 
-export default class logoutUserUseCase 
-{
+  constructor(repo: RepoUser) {
+    this._repo = repo;
+  }
 
-      async execute():Promise<any>
-      {
+  async execute(refreshToken: string): Promise<any> {
+    try {
 
-           try{
-
-           }catch(error:any)
-           {
-            
-           }
+      if (!refreshToken) {
+        throw new Error("No refresh token provided");
       }
+
+   
+      await this._repo.revokeRefreshToken(refreshToken);
+
+      return {
+        message: "Logout successful",
+      };
+
+    } catch (error: any) {
+      console.error("LogoutUseCase ERROR:", error.message);
+      throw error;
+    }
+  }
 }

@@ -8,4 +8,11 @@ export default abstract class  IRepoUser
 
      protected abstract LoginUser(baby:any):Promise<any>
      protected abstract FindUserByEmail(email:string):Promise<any>
+     protected abstract saveRefreshToken(data: {
+          userId: string;
+          token: string;
+          expiresAt: Date;
+        }): Promise<any>
+
+        protected abstract revokeRefreshToken(token: string): Promise<void>
 }
