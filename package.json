@@ -7,7 +7,9 @@
     "joi": "^18.1.2",
     "joi-typescript-validator": "^0.2.0",
     "jsonwebtoken": "^9.0.3",
-    "mongoose": "^9.6.0"
+    "mongoose": "^9.6.0",
+    "mqtt": "^5.15.1",
+    "socket.io": "^4.8.3"
   },
   "name": "api",
   "version": "1.0.0",

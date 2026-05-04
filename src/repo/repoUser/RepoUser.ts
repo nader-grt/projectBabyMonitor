@@ -101,13 +101,13 @@ export default class RepoUser extends IRepoUser {
     }
   }
 
-  // -------------------------
-  // FIND USER BY EMAIL
-  // -------------------------
+
   public async FindUserByEmail(email: string): Promise<any> {
     try {
-      const user = await UserModel.findOne({ email });
-
+      const user = await UserModel
+        .findOne({ email })
+        .select("+password"); //  FIX HERE
+  
       return user;
     } catch (error: any) {
       console.error("FindUserByEmail ERROR:", error.message);

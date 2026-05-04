@@ -1,12 +1,12 @@
+
+
 import { Request, Response, NextFunction } from "express";
-
 import jwt from "jsonwebtoken";
-
 
 export interface RequestAuth extends Request {
   user?: {
     email: string;
-    userId: number;
+    userId: string;
   };
 }
 
@@ -14,34 +14,26 @@ export default function verifyToken(
   req: RequestAuth,
   res: Response,
   next: NextFunction
-): any {
-  const authHeader = req.headers.authorization;
-
-
-  const headerToken = req.headers.authorization?.split(" ")[1];
-  const cookieToken = req.cookies?.refreshToken;
-
-  const token = headerToken || cookieToken;
-
-console.log("token verfy token step 2 ",token)
+) {
+  const token = req.headers.authorization?.split(" ")[1];
 
   if (!token) {
-    return res
-      .status(401)
-      .json({ message: "Access Denied. No token provided" });
-  } // ACCESS_TOKEN_SECRET  befor use JWT_SECRET
+    return res.status(401).json({
+      message: "Access Denied. No token provided",
+    });
+  }
 
   try {
-    const decoded: any = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!);
+    const decoded: any = jwt.verify(
+      token,
+      process.env.SECRET_ACCESS_TOKEN!
+    );
 
     req.user = {
       email: decoded.email,
-     
-      userId: decoded.id,
+      userId: decoded.userId,
     };
 
-    // console.log("222222222222222222222222",   req.user  ,"333333333333333333333   ",decoded.id )
- 
     next();
   } catch (err: any) {
     if (err?.name === "TokenExpiredError") {

@@ -20,6 +20,6 @@ export default function generateAccessToken(payload: any): string {
   }
 
   return jwt.sign(payload, secret, {
-    expiresIn: "1h",
+    expiresIn: "1h",  //20 15 minutes 
   });
 }
