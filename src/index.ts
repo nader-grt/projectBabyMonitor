@@ -3,8 +3,7 @@ import dotenv from "dotenv";
 import { connectDB } from "./config/configdb";
 import http   from "http"
 
-import getBaby from "./route/babyRoute/GetBabyRoute"
-import createBaby from "./route/babyRoute/CreateBabyRoute"
+
 
 // auth 
 
@@ -13,6 +12,11 @@ import loginUserRoute from "./route/auth/LoginUserRoute"
 import logoutUserRoute from "./route/auth/LogoutUserRoute"
 import { socketInit } from "./service/socket/socket";
 import MqttStart from "./service/mqttService/mqttService";
+
+// user with his baby 
+import getBabyinfo from "./route/BabyInfoRoute/GetBabyInfoRoute"
+
+
 
 dotenv.config();
 
@@ -26,9 +30,11 @@ app.use("/api", registerUserRoute);
 app.use("/api", loginUserRoute);
 app.use("/api", logoutUserRoute);
 
-// app.use("/api", getBaby);
-// app.use("/api", createBaby);
 
+
+//  user depend with her baby info
+
+app.use("/api",getBabyinfo)
 
      const server =  http.createServer(app)
        const  io = socketInit(server)

@@ -3,6 +3,7 @@ import { BabyModel } from "../../model/BabyModel";
 import IRepoUser from "./IRepoUser";
 import bcrypt from "bcrypt";
 import { RefreshTokenModel } from "../../model/RefreshTokenModel";
+import { SenSorBabyModel } from "../../model/SenSorBabyModel";
 
 export default class RepoUser extends IRepoUser {
 
@@ -106,7 +107,7 @@ export default class RepoUser extends IRepoUser {
     try {
       const user = await UserModel
         .findOne({ email })
-        .select("+password"); //  FIX HERE
+        .select("+password"); //  
   
       return user;
     } catch (error: any) {
@@ -114,6 +115,19 @@ export default class RepoUser extends IRepoUser {
       throw error;
     }
   }
+  public async FindBabyInfo(userId: any): Promise<any> {
+    try {
+      const babyInfo = await BabyModel
+        .findOne({ userId })
+        //.select("+password"); //  
+  
+      return babyInfo;
+    } catch (error: any) {
+      console.error("FindUserByuserId ERROR:", error.message);
+      throw error;
+    }
+  }
+
 
   public async saveRefreshToken(data: {
     userId: string;
@@ -152,4 +166,36 @@ export default class RepoUser extends IRepoUser {
       throw error;
     }
   }
+      static async getBabyData():Promise<any>
+      {
+         try {
+          const baby =     await  await BabyModel.find()
+
+          return baby
+         } catch (error:any) {
+          
+         }
+      }
+
+ static  async SenSorBabycreate(sensorData:any):Promise<any>
+ {
+
+              console.log("repo sensor data  ",sensorData)
+            try
+            {
+              // await SenSorBabyModel.create({
+              //   ...sensordata,
+              //   timestamp: sensordata.timestamp
+              // });
+            }catch(error:any)
+            {
+
+            }
+
+ }
+      /**
+       * 
+      
+       */
+  
 }

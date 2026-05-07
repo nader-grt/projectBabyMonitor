@@ -205,6 +205,61 @@ injection
 
 
 
+
+
+
+
+              service mqtt  
+
+               // if (!data.timestamp) {
+      //   console.warn("Missing timestamp → ignored");
+      //   return;
+      // }
+
+      // if (seen.has(data.timestamp)) {
+      //   console.log("Duplicate message skipped");
+      //   return;
+      // }
+
+      // seen.add(data.timestamp);
+
+      // if (seen.size > 1000) {
+      //   seen.clear();
+      // }
+
+      io.emit(topic, data);
+
+    //  const sensorData: any = {};
+//ok
+      // if (topic === "baby/envirement") {
+      //   sensorData.environmentTemperature = data.environmentTemperature;
+      //   sensorData.humidity = data.humidity;
+      //   sensorData.pressure = data.pressure;
+      // }
+//ok
+      // if (topic === "baby/vitals") {
+      //   sensorData.babyTemperature = data.babyTemperature;
+      //   sensorData.heartRate = data.heartRate;
+      // }
+// not ok capteur
+      // if (topic === "baby/status") {
+      //   sensorData.isCrying = data.isCrying;
+      //   sensorData.position = data.position
+      // }
+
+      // if (Object.keys(sensorData).length > 0) {
+      //   await SenSorBabyModel.create({
+      //     ...sensorData,
+      //     timestamp: data.timestamp
+      //   });
+      // }
+
+
+
+
+
+
+
    
 
    
@@ -267,4 +322,12 @@ injection
 
     
      mqtt  two  carte Reseberu Esp32   publish send data   via broker mqtt  server   subscribe  <==== node js  client  
+
+     client.publish("baby/status")
+     client.publish("baby/envirment")
+
+
+     history per hours per  day  per week per month 
+
+     baby/all
  */

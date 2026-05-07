@@ -15,4 +15,7 @@ export default abstract class  IRepoUser
         }): Promise<any>
 
         protected abstract revokeRefreshToken(token: string): Promise<void>
+
+        protected abstract FindBabyInfo(userId:any):Promise<any>
+        //protected abstract SenSorBabycreate(sensordata:any):Promise<any>
 }

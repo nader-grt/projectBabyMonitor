@@ -1,6 +1,6 @@
 import mqtt from "mqtt";
 import { Server } from "socket.io";
-import { SenSorBabyModel } from "../../model/SenSorBabyModel";
+import SensorComingDataUseCase from "../../usecase/SensorComingDataUseCase/SensorComingDataUseCase";
 
 
 /**
@@ -43,56 +43,21 @@ export default async function MqttStart(io: Server): Promise<any> {
     client.subscribe("baby/#", { qos: 1 });
   });
 
-  client.on("message", async (topic, message) => {
+  client.on("message", async (topic, dataComing) => {
     try {
-      const data = JSON.parse(message.toString());
+      const data = JSON.parse(dataComing.toString());
 
-      console.log("MQTT:", topic, data);
-
-      if (!data.timestamp) {
-        console.warn("Missing timestamp → ignored");
-        return;
-      }
-
-      if (seen.has(data.timestamp)) {
-        console.log("Duplicate message skipped");
-        return;
-      }
-
-      seen.add(data.timestamp);
-
-      if (seen.size > 1000) {
-        seen.clear();
-      }
+      console.log("MQTT: !!!  service  mqtt  ", topic, data);
+         const sensorUsecase =    new SensorComingDataUseCase()
+         await sensorUsecase.execute(topic ,data )
+  
 
       io.emit(topic, data);
 
-      const sensorData: any = {};
 
-      if (topic === "baby/envirement") {
-        sensorData.environmentTemperature = data.environmentTemperature;
-        sensorData.humidity = data.humidity;
-        sensorData.pressure = data.pressure;
-      }
-
-      if (topic === "baby/vitals") {
-        sensorData.babyTemperature = data.babyTemperature;
-        sensorData.heartRate = data.heartRate;
-      }
-
-      if (topic === "baby/status") {
-        sensorData.isCrying = data.isCrying;
-      }
-
-      if (Object.keys(sensorData).length > 0) {
-        await SenSorBabyModel.create({
-          ...sensorData,
-          timestamp: data.timestamp
-        });
-      }
 
     } catch (error: any) {
-      console.error("MQTT Error:", error.message);
+      console.error("MQTT Error:  this is error ", error.message);
     }
   });
 }
