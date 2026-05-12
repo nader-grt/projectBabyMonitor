@@ -32,7 +32,6 @@ app.use("/api", logoutUserRoute);
 
 
 
-//  user depend with her baby info
 
 app.use("/api",getBabyinfo)  ;
 
@@ -41,11 +40,9 @@ app.use("/api",getHistoryBabyinfo)
      const server =  http.createServer(app)
        const  io = socketInit(server)
 //
-//  Start everything
 const startServer = async () => {
   await connectDB();
 
-  //  Start MQTT after DB + socket
  MqttStart(io);
 
   server.listen(PORT, () => {
