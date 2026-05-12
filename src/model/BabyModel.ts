@@ -53,10 +53,8 @@ babySchema.virtual("ageInMonths").get(function () {
   );
 });
 
-//  FIXED INDEX
 babySchema.index({ userId: 1, createdAt: -1 });
 
-//  STATIC METHOD
 babySchema.statics.findByUser = function (userId: Types.ObjectId) {
   return this.find({ userId });
 };
