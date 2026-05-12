@@ -29,30 +29,27 @@ export default class RegisterUserUseCase {
   async execute(dto: IUserInfoDTO): Promise<any> {
     try {
 
-      // 1. Check if user already exists
       const existingUser = await this._repo.FindUserByEmail(dto.email);
 
       if (existingUser) {
         throw new Error("Email already exists");
       }
 
-      // 2. Create domain user (handles validation + hashing)
       const userDomain = new UserDomain({
         fullName: dto.fullName,
         email: dto.email,
         password: dto.password,
       });
 
-      // 3. Prepare persistence object
+      //  Prepare persistence object
       const userPersistence = userDomain.toPersistence();
 
-      // 4. Call repository (user + baby creation)
       const result = await this._repo.RegisterUser({
         ...userPersistence,
         baby: dto.baby,
       });
 
-      // 5. Generate token
+      // . Generate token
       const payload = {
         userId: result.id,
         email: result.email,
@@ -65,7 +62,6 @@ export default class RegisterUserUseCase {
       );
 
      
-      // 6. Return response
       return {
         user: result,
         accessToken,

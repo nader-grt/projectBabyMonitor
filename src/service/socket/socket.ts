@@ -16,14 +16,5 @@ export  const socketInit = (server:any) => {
 
 }
 
-/**
- * 
-     _connectTimeout: number;
-    private _corsMiddleware;
-    /**
-     * Server constructor.
-     *
-     * @param srv http server, port, or options
-     * @param [opts]
-     */
+
  
