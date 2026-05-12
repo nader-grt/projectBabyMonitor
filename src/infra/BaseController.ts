@@ -388,4 +388,170 @@ const jwt = require("jsonwebtoken");
 
 require("jsonwebtoken").sign({ userId: '6a022b6da5cbc396e89db7ed' ,
 email:"islemfarjallah@gmail.com"}, "ARÈP45123456789islm@@@!124dr''45abbbbbbbbbbbbbbbbbbhjk@%lfgl2ty2aer525+05",  { expiresIn: "1h" }) ;
+
+this service must active 
+ sudo systemctl status mosquitto
+
+  for subscriber 
+  mosquitto_sub -h localhost -t "baby/all" -v
+
+
+for test  publisher 
+mosquitto_pub -h localhost -t "baby/all" -m "{ 
+  \"timestamp\": $(date +%s),
+  \"environmentTemperature\": 24,
+  \"humidity\": 55,
+  \"pressure\": 1013,
+  \"babyTemperature\": 36.8,
+  \"heartRate\": 95,
+  \"isCrying\": false,
+  \"position\": \"back\"
+}"
+➜  ~ mosquitto_pub -h localhost -t "baby/all" -m "{ 
+  \"timestamp\": $(date +%s),
+  \"environmentTemperature\": 24,
+  \"humidity\": 55,
+  \"pressure\": 1013,
+  \"babyTemperature\": 36.8,
+  \"heartRate\": 95,
+  \"isCrying\": false,
+  \"position\": \"back\"
+}"
+➜  ~ mosquitto_pub -h localhost -t "baby/all" -m "{ 
+  \"timestamp\": $(date +%s),
+  \"environmentTemperature\": 24,
+  \"humidity\": 55,
+  \"pressure\": 1013,
+  \"babyTemperature\": 36.8,
+  \"heartRate\": 95,
+  \"isCrying\": false,
+  \"position\": \"back\"
+}"
+➜  ~ mosquitto_pub -h localhost -t "baby/all" -m "{ 
+  \"timestamp\": $(date +%s),
+  \"environmentTemperature\": 24,
+  \"humidity\": 55,
+  \"pressure\": 1013,
+  \"babyTemperature\": 36.8,
+  \"heartRate\": 95,
+  \"isCrying\": false,
+  \"position\": \"back\"
+}"
+
+➜  ~ mosquitto_pub -h localhost -t "baby/all" -m "{ 
+  \"timestamp\": $(date +%s),
+  \"environmentTemperature\": 24,
+  \"humidity\": 55,
+  \"pressure\": 1013,
+  \"babyTemperature\": 36.8,
+  \"heartRate\": 95,
+  \"isCrying\": false,
+  \"position\": \"back\"
+}"
+
+➜  ~ mosquitto_pub -h localhost -t "baby/all" -m "{ 
+  \"timestamp\": $(date +%s),
+  \"environmentTemperature\": 24,
+  \"humidity\": 55,
+  \"pressure\": 1013,
+  \"babyTemperature\": 36.8,
+  \"heartRate\": 95,
+  \"isCrying\": false,
+  \"position\": \"back\"
+}"
+
+➜  ~ mosquitto_pub -h localhost -t "baby/all" -m "{ 
+  \"timestamp\": $(date +%s),
+  \"environmentTemperature\": 24,
+  \"humidity\": 55,
+  \"pressure\": 1013,
+  \"babyTemperature\": 36.8,
+  \"heartRate\": 95,
+  \"isCrying\": false,
+  \"position\": \"back\"
+}"
+
+➜  ~ mosquitto_pub -h localhost -t "baby/all" -m "{ 
+  \"timestamp\": $(date +%s),
+  \"environmentTemperature\": 24,
+  \"humidity\": 55,
+  \"pressure\": 1013,
+  \"babyTemperature\": 36.8,
+  \"heartRate\": 95,
+  \"isCrying\": false,
+  \"position\": \"back\"
+}"
+
+➜  ~ mosquitto_pub -h localhost -t "baby/all" -m "{ 
+  \"timestamp\": $(date +%s),
+  \"environmentTemperature\": 24,
+  \"humidity\": 55,
+  \"pressure\": 1013,
+  \"babyTemperature\": 36.8,
+  \"heartRate\": 95,
+  \"isCrying\": false,
+  \"position\": \"back\"
+}"
+
+➜  ~ mosquitto_pub -h localhost -t "baby/all" -m "{ 
+  \"timestamp\": $(date +%s),
+  \"environmentTemperature\": 24,
+  \"humidity\": 55,
+  \"pressure\": 1013,
+  \"babyTemperature\": 36.8,
+  \"heartRate\": 95,
+  \"isCrying\": false,
+  \"position\": \"back\"
+}"
+
+➜  ~ mosquitto_pub -h localhost -t "baby/all" -m "{ 
+  \"timestamp\": $(date +%s),
+  \"environmentTemperature\": 29,
+  \"humidity\": 95,
+  \"pressure\": 1009,
+  \"babyTemperature\": 37.5,
+  \"heartRate\": 130,
+  \"isCrying\": false,
+  \"position\": \"back\"
+}"
+➜  ~ mosquitto_pub -h localhost -t "baby/all" -m "{ 
+  \"timestamp\": $(date +%s),
+  \"environmentTemperature\": 27,
+  \"humidity\": 64,
+  \"pressure\": 1014,
+  \"babyTemperature\": 37,
+  \"heartRate\": 115,
+  \"isCrying\": false,
+  \"position\": \"face_down\"
+}"
+➜  ~ mosquitto_pub -h localhost -t "baby/all" -m "{ 
+  \"timestamp\": $(date +%s),
+  \"environmentTemperature\": 27,
+  \"humidity\": 64,
+  \"pressure\": 1014,
+  \"babyTemperature\": 37,
+  \"heartRate\": 115,
+  \"isCrying\": false,
+  \"position\": \"face_down\"
+}"
+➜  ~ mosquitto_pub -h localhost -t "baby/all" -m "{ 
+  \"timestamp\": $(date +%s),
+  \"environmentTemperature\": 27,
+  \"humidity\": 64,
+  \"pressure\": 1014,
+  \"babyTemperature\": 37,
+  \"heartRate\": 115,
+  \"isCrying\": false,
+  \"position\": \"face_down\"
+}"
+➜  ~ mosquitto_pub -h localhost -t "baby/all" -m "{ 
+  \"timestamp\": $(date +%s),
+  \"environmentTemperature\": 27,
+  \"humidity\": 64,
+  \"pressure\": 1014,
+  \"babyTemperature\": 37,
+  \"heartRate\": 115,
+  \"isCrying\": false,
+  \"position\": \"face_down\"
+}"
  */

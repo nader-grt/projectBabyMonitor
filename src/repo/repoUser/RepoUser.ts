@@ -234,50 +234,119 @@ export default class RepoUser extends IRepoUser {
 
         //  }
 
-        public async getHistoryinfoBaby(userid: any): Promise<any> {
-          try {
-              const babyInfo: any = await this.FindBabyInfo(userid);
-              if (!babyInfo) {
-                  return { success: false, message: "Baby not found" };
-              }
+      //   public async getHistoryinfoBaby(userid: any): Promise<any> {
+      //     try {
+      //         const babyInfo: any = await this.FindBabyInfo(userid);
+      //         if (!babyInfo) {
+      //             return { success: false, message: "Baby not found" };
+      //         }
       
-              const babyId = babyInfo._id;
+      //         const babyId = babyInfo._id;
       
-              const sensorData = await SenSorBabyModel.findOne({ babyId })
-                  .sort({ timestamp: -1 }) // Get the most recent
-                  .exec();
+      //         const sensorData = await SenSorBabyModel.findOne({ babyId })
+      //             .sort({ timestamp: -1 }) // Get the most recent
+      //             .exec();
       
-              if (!sensorData) {
-                  return { success: false, message: "No sensor data found" };
-              }
+      //         if (!sensorData) {
+      //             return { success: false, message: "No sensor data found" };
+      //         }
       
-              const lastTimestamp = new Date(sensorData.timestamp).getTime();
-              const now = Date.now();
-              const TEN_MINUTES_MS = 10 * 60 * 1000;
+      //         const lastTimestamp = new Date(sensorData.timestamp).getTime();
+      //         const now = Date.now();
+      //         const TEN_MINUTES_MS = 10 * 60 * 1000;
       
-              const timeElapsed = now - lastTimestamp;
+      //         const timeElapsed = now - lastTimestamp;
       
-              // 3. Throttle Logic: If less than 10 mins, ignore/block
-              if (timeElapsed < TEN_MINUTES_MS) {
-                  const secondsRemaining = Math.floor((TEN_MINUTES_MS - timeElapsed) / 1000);
-                  const minutesRemaining = Math.ceil(secondsRemaining / 60);
+      //         // 3. Throttle Logic: If less than 10 mins, ignore/block
+      //         if (timeElapsed < TEN_MINUTES_MS) {
+      //             const secondsRemaining = Math.floor((TEN_MINUTES_MS - timeElapsed) / 1000);
+      //             const minutesRemaining = Math.ceil(secondsRemaining / 60);
       
-                  return { 
-                      success: false, 
-                      message: "Throttled: Data is only provided every 10 minutes.",
-                      nextUpdateIn: `${minutesRemaining} minute(s)`,
-                      cachedData: sensorData // We return the old data instead of nothing
-                  };
-              }
+      //             return { 
+      //                 success: false, 
+      //                 message: "Throttled: Data is only provided every 10 minutes.",
+      //                 nextUpdateIn: `${minutesRemaining} minute(s)`,
+      //                 cachedData: sensorData // We return the old data instead of nothing
+      //             };
+      //         }
       
-              return { 
-                  success: true, 
-                  data: sensorData 
-              };
+      //         return { 
+      //             success: true, 
+      //             data: sensorData 
+      //         };
       
-          } catch (error: any) {
-              return { success: false, message: "Server error", error: error.message };
-          }
-      }
-  
+      //     } catch (error: any) {
+      //         return { success: false, message: "Server error", error: error.message };
+      //     }
+      // }
+      
+      public async getHistoryinfoBaby(userid: any): Promise<any> {
+        try {
+    
+            const babyInfo: any = await this.FindBabyInfo(userid);
+    
+            if (!babyInfo) {
+                return {
+                    success: false,
+                    message: "Baby not found"
+                };
+            }
+    
+            const babyId = babyInfo._id;
+    
+            const sensorData = await SenSorBabyModel.find({ babyId })
+                .sort({ timestamp: 1 });
+    
+            if (!sensorData.length) {
+                return {
+                    success: false,
+                    message: "No sensor data found"
+                };
+            }
+    
+            const TEN_MINUTES = 10 * 60 * 1000;
+    
+            const filteredData = [];
+    
+            let lastAcceptedTime = 0;
+    
+            for (const item of sensorData) {
+    
+                const currentTime =
+                    new Date(item.timestamp).getTime();
+    
+                // أول عنصر
+                if (lastAcceptedTime === 0) {
+    
+                    filteredData.push(item);
+    
+                    lastAcceptedTime = currentTime;
+    
+                    continue;
+                }
+    
+              
+                if (currentTime - lastAcceptedTime >= TEN_MINUTES) {
+    
+                    filteredData.push(item);
+    
+                    lastAcceptedTime = currentTime;
+                }
+            }
+    
+            return {
+                success: true,
+                count: filteredData.length,
+                data: filteredData[filteredData.length - 1]
+            };
+    
+        } catch (error: any) {
+    
+            return {
+                success: false,
+                message: "Server error",
+                error: error.message
+            };
+        }
+    }
 }
