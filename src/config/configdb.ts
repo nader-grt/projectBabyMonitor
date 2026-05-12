@@ -13,7 +13,6 @@ export const connectDB = async (): Promise<void> => {
   } catch (error: any) {
     console.error(" DB connection error:", error.message);
 
-    //  Better debug
     if (error.code === "ETIMEDOUT") {
       console.error("Timeout: Check internet / MongoDB Atlas access");
     }
