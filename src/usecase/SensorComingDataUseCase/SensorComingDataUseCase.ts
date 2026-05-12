@@ -1,54 +1,74 @@
+import { Response } from "express";
 import RepoUser from "../../repo/repoUser/RepoUser";
 
 export default class SensorComingDataUseCase {
-  async execute(topic: any, data: any): Promise<any> {
-    const seen = new Set<number>();
-    console.log("topic usecase ", topic, " data from service mqtt ", data);
+         private _TENMIN :number = 10 *60 *1000    // ms 
+         private _lastAllowed   = new Map<string, number>();
+
+          private Allwed(key :string,res?:Response):boolean
+          {
+            const now  =  Date.now() ;
+            const last  =  this._lastAllowed.get(key) || 0 
+
+            if((now - last) < this._TENMIN)
+            {
+              return false
+            }
+             
+               this._lastAllowed.set(key,now)
+            return true
+          }
+
+  async execute(topic: string, data: any): Promise<any> {
+    let res:any =  {}
     try {
-      if (!data.timestamp) {
-        console.warn("Missing timestamp → ignored");
+
+      console.log(" MQTT topic:", topic, "data:", data);
+
+      if (topic !== "baby/all") return;
+
+      if (!data?.timestamp) {
+        console.warn("⚠️ Missing timestamp → ignored");
         return;
       }
 
-      if (seen.has(data.timestamp)) {
-        console.log("Duplicate message skipped");
+             const  key =  topic
+
+             if(!this.Allwed(key,res))
+             {   //console.error(" ignore message ")
+                return res.status(402).json({message:"the time is less"})
+             }
+      const sensorData = {
+        environmentTemperature: data.environmentTemperature,
+        humidity: data.humidity,
+        pressure: data.pressure,
+        babyTemperature: data.babyTemperature,
+        heartRate: data.heartRate,
+        isCrying: data.isCrying,
+        position: data.position,
+      };
+
+      const babies = await RepoUser.getBabyData();
+
+      if (!babies?.length) {
+        console.warn("⚠️ No baby found");
         return;
       }
 
-      seen.add(data.timestamp);
+      const finalSensorData = {
+        ...sensorData,
+        babyId: babies[0]._id,
+      };
 
-      if (seen.size > 1000) {
-        seen.clear();
-      }
+      const saved = await RepoUser.SenSorBabycreate(finalSensorData);
 
-      const sensorData: any = {};
-      //ok
-      if (topic === "baby/envirement") {
-        sensorData.environmentTemperature = data.environmentTemperature;
-        sensorData.humidity = data.humidity;
-        sensorData.pressure = data.pressure;
-      }
-      //ok
-      if (topic === "baby/vitals") {
-        sensorData.babyTemperature = data.babyTemperature;
-        sensorData.heartRate = data.heartRate;
-      }
-      // not ok capteur
-      if (topic === "baby/status") {
-        sensorData.isCrying = data.isCrying;
-        sensorData.position = data.position;
-      }
-      const babyIdInfo = await RepoUser.getBabyData();
+      console.log("Sensor saved:", saved);
 
+      return saved;
 
-          sensorData.babyId = babyIdInfo[0]._id
-
-          
-
-          const dataComingSensor  = await RepoUser.SenSorBabycreate(sensorData);
-      console.log(babyIdInfo, "usecase accept service of  mqtt ");
     } catch (error: any) {
-      console.log("error ", error);
+      console.log(" SensorComingDataUseCase error:", error.message);
+      return null;
     }
   }
 }

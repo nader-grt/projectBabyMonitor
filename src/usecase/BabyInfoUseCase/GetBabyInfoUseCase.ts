@@ -1,7 +1,7 @@
 import RepoUser from "../../repo/repoUser/RepoUser";
 
 
-interface IInfo
+ export interface IInfoDTO
 {
       userId:number | any ;
       email:string ;
@@ -16,7 +16,7 @@ export default class GetBabyInfoUseCase
         this._repo = repo;
       }
 
-         async execute(userInfo:IInfo):Promise<{success:boolean,message:string,data?:any} | undefined>
+         async execute(userInfo:IInfoDTO):Promise<{success:boolean,message:string,data?:any} | undefined>
          {
             const {userId,email}  = userInfo 
                try {

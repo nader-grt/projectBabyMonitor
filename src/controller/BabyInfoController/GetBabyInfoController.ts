@@ -27,7 +27,12 @@ export default class GetBabyInfoController extends BaseController
                     {
                          this.fail(res,result?.message)
                     }
-                this.ok(res,result?.data, result?.message)
+
+                    if(result?.success)
+                        {
+                            this.resultValue(res,{babyId:result?.data}, result?.message)
+                        }
+                
             } catch (error:any) {
                 
             }

@@ -177,25 +177,107 @@ export default class RepoUser extends IRepoUser {
          }
       }
 
- static  async SenSorBabycreate(sensorData:any):Promise<any>
- {
-
-              console.log("repo sensor data  ",sensorData)
-            try
-            {
-              // await SenSorBabyModel.create({
-              //   ...sensordata,
-              //   timestamp: sensordata.timestamp
-              // });
-            }catch(error:any)
-            {
-
-            }
-
- }
+      static async SenSorBabycreate(
+        sensorData: any
+      ): Promise<any> {
+      
+        console.log("repo sensor data", sensorData);
+      
+        try {
+      
+          const createdSensor =
+            await SenSorBabyModel.create(sensorData);
+      
+          console.log(
+            "Sensor saved successfully",
+            createdSensor
+          );
+      
+          return createdSensor;
+      
+        } catch (error: any) {
+      
+          console.log(
+            "Repository Sensor Error",
+            error.message
+          );
+      
+          return null;
+        }
+      }
       /**
        * 
       
        */
+
+        //   public async  getHistoryinfoBaby(userid:any):Promise<any>
+        //  {
+
+        //        const babyInfo  : any = await this.FindBabyInfo(userid)
+        //         const babyId  = babyInfo._id
+
+        //            if(!babyId)
+        //            {
+        //               return {success : false,message:"baby not found "}
+        //            }
+
+
+                       
+
+        //                 const sensorData = await SenSorBabyModel
+        //                 .findOne({ babyId })
+        //                     try {
+        //                         return {success : true,data:sensorData}
+        //                     } catch (error:any) {
+                              
+        //                     }
+
+        //  }
+
+        public async getHistoryinfoBaby(userid: any): Promise<any> {
+          try {
+              const babyInfo: any = await this.FindBabyInfo(userid);
+              if (!babyInfo) {
+                  return { success: false, message: "Baby not found" };
+              }
+      
+              const babyId = babyInfo._id;
+      
+              const sensorData = await SenSorBabyModel.findOne({ babyId })
+                  .sort({ timestamp: -1 }) // Get the most recent
+                  .exec();
+      
+              if (!sensorData) {
+                  return { success: false, message: "No sensor data found" };
+              }
+      
+              const lastTimestamp = new Date(sensorData.timestamp).getTime();
+              const now = Date.now();
+              const TEN_MINUTES_MS = 10 * 60 * 1000;
+      
+              const timeElapsed = now - lastTimestamp;
+      
+              // 3. Throttle Logic: If less than 10 mins, ignore/block
+              if (timeElapsed < TEN_MINUTES_MS) {
+                  const secondsRemaining = Math.floor((TEN_MINUTES_MS - timeElapsed) / 1000);
+                  const minutesRemaining = Math.ceil(secondsRemaining / 60);
+      
+                  return { 
+                      success: false, 
+                      message: "Throttled: Data is only provided every 10 minutes.",
+                      nextUpdateIn: `${minutesRemaining} minute(s)`,
+                      cachedData: sensorData // We return the old data instead of nothing
+                  };
+              }
+      
+              return { 
+                  success: true, 
+                  data: sensorData 
+              };
+      
+          } catch (error: any) {
+              return { success: false, message: "Server error", error: error.message };
+          }
+      }
   
 }

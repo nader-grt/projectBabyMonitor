@@ -28,6 +28,13 @@ export default abstract class BaseController {
     });
   }
 
+  protected resultValue(res: Response, data?: any, message = "OK") {
+    return res.status(200).json({
+     
+      message,
+      data,
+    });
+  }
   protected created(res: Response, data?: any, message = "Created") {
     return res.status(201).json({
       success: true,
@@ -85,6 +92,38 @@ export default abstract class BaseController {
 
 /**
  
+mosquitto_sub -h localhost -t "baby/#" -v
+
+baby/all {
+  "timestamp": 1778174550,
+  "environmentTemperature": 26,
+  "humidity": 60,
+  "pressure": 1012,
+  "babyTemperature": 37,
+  "heartRate": 110,
+  "isCrying": false,
+  "position": "back"
+}
+
+
+
+
+    for test publish and subscribe  
+
+    mosquitto_pub -h localhost  -t "baby/all" -m "{ 
+  \"timestamp\": $(date +%s),
+  \"environmentTemperature\": 26,
+  \"humidity\": 60,
+  \"pressure\": 1012,
+  \"babyTemperature\": 37,
+  \"heartRate\": 110,
+  \"isCrying\": false,
+  \"position\": \"back\"
+}"
+
+
+
+
    cycle request  and response 
 
   response can be html  or xml or json 
@@ -330,4 +369,23 @@ injection
      history per hours per  day  per week per month 
 
      baby/all
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     node
+const jwt = require("jsonwebtoken");
+
+require("jsonwebtoken").sign({ userId: '6a022b6da5cbc396e89db7ed' ,
+email:"islemfarjallah@gmail.com"}, "ARÈP45123456789islm@@@!124dr''45abbbbbbbbbbbbbbbbbbhjk@%lfgl2ty2aer525+05",  { expiresIn: "1h" }) ;
  */

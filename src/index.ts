@@ -16,7 +16,7 @@ import MqttStart from "./service/mqttService/mqttService";
 // user with his baby 
 import getBabyinfo from "./route/BabyInfoRoute/GetBabyInfoRoute"
 
-
+import getHistoryBabyinfo from "./route/HistoryRoute/HistoryBabyInfoRoute"
 
 dotenv.config();
 
@@ -34,7 +34,9 @@ app.use("/api", logoutUserRoute);
 
 //  user depend with her baby info
 
-app.use("/api",getBabyinfo)
+app.use("/api",getBabyinfo)  ;
+
+app.use("/api",getHistoryBabyinfo)
 
      const server =  http.createServer(app)
        const  io = socketInit(server)

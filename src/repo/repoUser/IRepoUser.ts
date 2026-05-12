@@ -18,4 +18,5 @@ export default abstract class  IRepoUser
 
         protected abstract FindBabyInfo(userId:any):Promise<any>
         //protected abstract SenSorBabycreate(sensordata:any):Promise<any>
+        protected abstract getHistoryinfoBaby(userid:any):Promise<any>
 }
